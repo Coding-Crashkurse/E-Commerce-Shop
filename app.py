@@ -19,6 +19,7 @@ def is_valid_email(email):
 app = Flask(__name__)
 app.secret_key = "markus"
 setup_db(app, database_path="postgresql://markus:test@134.122.78.140:5432/register")
+db = SQLAlchemy(app)
 CORS(app)
 api = Api(
     app, version="1.0", title="Portfolio RestAPI", description="A simple portfolio API"
@@ -37,7 +38,7 @@ class RegisterUser(Resource):
         password = request.get_json()["password"]
 
         if is_valid_email(email) is False:
-            return {"message", "Invalid Email"}, 409
+            return {"message": "Invalid Email"}, 409
 
         filtereduser = User.query.filter_by(email=email).one_or_none()
         if filtereduser is not None:
@@ -61,6 +62,70 @@ class RegisterUser(Resource):
             db.session.close()
         if error is False:
             return {"created": 201}, 201
+
+
+@api.route("/login")
+class UserLogin(Resource):
+    def post(self):
+        """Allows a new user to login with his email and password"""
+
+        email = request.get_json()["email"]
+        password = request.get_json()["password"]
+
+        user = User.query.filter_by(email=email).one_or_none()
+        print(user)
+
+        if user is None:
+            return {"message": "user does not exist"}, 404
+
+        user = user.format()
+        if bcrypt.check_password_hash(pw_hash=user["password"], password=password):
+
+            if user["active"]:
+                access_token = create_access_token(identity=user["id"])
+                refresh_token = create_refresh_token(identity=user["id"])
+                return (
+                    {"access_token": access_token, "refresh_token": refresh_token},
+                    200,
+                )
+
+            else:
+                return {"message": "User not activated"}, 400
+
+        else:
+            return {"message": "Wrong credentials"}, 401
+
+
+@api.route("/confirm")
+class Confirm(Resource):
+    def post(self):
+        email = request.get_json()["email"]
+
+        user = User.query.filter_by(email=email).one_or_none()
+        if user is None:
+            return {"message": "User not found"}
+
+        token = s.dumps(email, salt="email-confirmation")
+
+        EMAIL_ADDRESS = os.environ.get("MAIL_USERNAME")
+        EMAIL_PASSWORD = os.environ.get("MAIL_PASSWORD")
+
+        msg = EmailMessage()
+        msg["Subject"] = "Confirmation email"
+        msg["From"] = EMAIL_ADDRESS
+        msg["To"] = email
+
+        msg.set_content(
+            "Please copy this confirmation link into your browser: localhost:5000/confirm/"
+            + token
+        )
+
+        with smtplib.SMTP_SSL(
+            os.environ.get("MAIL_SERVER"), os.environ.get("MAIL_PORT")
+        ) as smtp:
+            smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+            smtp.send_message(msg)
+        return {"message": "mail sent successful"}
 
 
 if __name__ == "__main__":
