@@ -57,8 +57,10 @@ class RegisterUser(Resource):
         username = request.get_json()["username"]
         password = request.get_json()["password"]
 
+        print(fullname, email, username, password)
+
         if is_valid_email(email) is False:
-            return {"message": "Invalid Email"}, 409
+            return {"message": "Invalid Email"}, 401
 
         filtereduser = User.query.filter_by(email=email).one_or_none()
         if filtereduser is not None:
