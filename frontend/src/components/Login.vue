@@ -76,6 +76,7 @@
               >Login</v-btn
             >
           </v-card-actions>
+          <div id="error_div">{{ errortxt }}</div>
         </v-card>
       </v-col>
     </v-row>
@@ -102,7 +103,9 @@ export default {
         reg_email: "",
         reg_username: "",
         reg_password: ""
-      }
+      },
+      error: false,
+      errortxt: "dsad"
     };
   },
   methods: {
@@ -112,19 +115,25 @@ export default {
     submitRegister() {
       axios
         .post("http://localhost:5000/register", {
-          // headers: {
-          //   Accept: "application/json",
-          //   "Content-Type": "application/json",
-          //   "Access-Control-Allow-Origin": "*"
-          // },
           fullname: this.registerData.fullname,
           email: this.registerData.reg_email,
           username: this.registerData.reg_username,
           password: this.registerData.reg_password
         })
-        .then(res => console.log(res))
-        .catch(error => {
-          console.log(error);
+        .then(res => {
+          console.log(res);
+          this.error = false;
+        })
+        .catch(err => {
+          console.log(err);
+          this.error = true;
+          if (err.response.data.message === "User already exists") {
+            this.errortxt = err.response.data.message;
+          } else if (err.response.data.message === "Username already taken") {
+            this.errortxt = err.response.data.message;
+          } else if (err.response.data.message === "Invalid Email") {
+            this.errortxt = err.response.data.message;
+          }
         });
     },
     submitLogin() {
@@ -157,5 +166,15 @@ export default {
 .active {
   background: white;
   color: #229495;
+}
+
+#error_div {
+  color: white;
+  background: red;
+  padding: 7px 5px;
+  display: block;
+  width: 100%;
+  text-align: center;
+  margin-top: 15px;
 }
 </style>
