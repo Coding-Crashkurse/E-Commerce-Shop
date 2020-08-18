@@ -57,14 +57,14 @@ class RegisterUser(Resource):
         username = request.get_json()["username"]
         password = request.get_json()["password"]
 
-        print(fullname, email, username, password)
+        print(is_valid_email(email))
 
         if is_valid_email(email) is False:
             return {"message": "Invalid Email"}, 401
 
         filtereduser = User.query.filter_by(email=email).one_or_none()
         if filtereduser is not None:
-            return {"message": "User already exists"}, 401
+            return {"message": "Email already taken"}, 401
 
         filteredusername = User.query.filter_by(username=username).one_or_none()
         if filteredusername is not None:
@@ -97,7 +97,7 @@ class UserLogin(Resource):
         user = User.query.filter_by(email=email).one_or_none()
 
         if user is None:
-            return {"message": "user does not exist"}, 404
+            return {"message": "User does not exist"}, 404
 
         user = user.format()
         if bcrypt.check_password_hash(pw_hash=user["password"], password=password):
@@ -123,7 +123,7 @@ class Confirm(Resource):
 
         user = User.query.filter_by(email=email).one_or_none()
         if user is None:
-            return {"message": "User not found"}
+            return {"message": "User not found"}, 401
 
         token = s.dumps(email, salt="email-confirmation")
 
@@ -145,7 +145,7 @@ class Confirm(Resource):
         ) as smtp:
             smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
             smtp.send_message(msg)
-        return {"message": "mail sent successfully"}
+        return {"message": "mail sent successfully"}, 200
 
 
 @api.route("/confirm/<token>")

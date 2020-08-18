@@ -15,6 +15,7 @@
           <v-card-text v-if="login">
             <v-form>
               <v-text-field
+                v-model="loginData.email"
                 label="Login"
                 name="login"
                 prepend-icon="mdi-account"
@@ -22,6 +23,7 @@
               ></v-text-field>
 
               <v-text-field
+                v-model="loginData.password"
                 id="password"
                 label="Password"
                 name="password"
@@ -76,7 +78,14 @@
               >Login</v-btn
             >
           </v-card-actions>
-          <div id="error_div">{{ errortxt }}</div>
+          <div id="error_div" v-if="this.error">
+            {{ errortxt }}
+            <v-spacer></v-spacer>
+            <v-btn color="white" v-if="activate_user_btn" @click="activateUser"
+              >Activate user</v-btn
+            >
+          </div>
+          <div id="success_div" v-if="this.success">{{ successtxt }}</div>
         </v-card>
       </v-col>
     </v-row>
@@ -104,13 +113,22 @@ export default {
         reg_username: "",
         reg_password: ""
       },
+      loginData: {
+        email: "",
+        password: ""
+      },
       error: false,
-      errortxt: "dsad"
+      errortxt: "",
+      success: false,
+      successtxt: "",
+      activate_user_btn: false
     };
   },
   methods: {
     toggleLogin() {
       this.login = !this.login;
+      this.error = false;
+      this.success = false;
     },
     submitRegister() {
       axios
@@ -123,24 +141,57 @@ export default {
         .then(res => {
           console.log(res);
           this.error = false;
+          this.success = true;
+          this.successtxt = "User successfully created";
         })
         .catch(err => {
           console.log(err);
           this.error = true;
-          if (err.response.data.message === "User already exists") {
-            this.errortxt = err.response.data.message;
-          } else if (err.response.data.message === "Username already taken") {
-            this.errortxt = err.response.data.message;
-          } else if (err.response.data.message === "Invalid Email") {
-            this.errortxt = err.response.data.message;
-          }
+          this.success = false;
+          this.errortxt = err.response.data.message;
         });
     },
     submitLogin() {
-      axios.post("http://localhost:5000/login", {
-        email: "test123@gmail.com",
-        password: "testpw"
-      });
+      axios
+        .post("http://localhost:5000/login", {
+          email: this.loginData.email,
+          password: this.loginData.password
+        })
+        .then(res => {
+          console.log(res);
+          this.error = false;
+          this.success = true;
+          this.successtxt = "Login successful";
+        })
+        .catch(err => {
+          console.log(err);
+          this.error = true;
+          this.success = false;
+          this.errortxt = err.response.data.message;
+          if (err.response.data.message === "User not activated") {
+            this.activate_user_btn = true;
+          } else {
+            this.activate_user_btn = false;
+          }
+        });
+    },
+    activateUser() {
+      axios
+        .post("http://localhost:5000/confirm", {
+          email: this.loginData.email
+        })
+        .then(res => {
+          console.log(res);
+          this.error = false;
+          this.success = true;
+          this.successtxt = "Mail sent successfully";
+        })
+        .catch(err => {
+          console.log(err);
+          this.error = true;
+          this.success = false;
+          this.errortxt = err.response.data.message;
+        });
     }
   },
   computed: {
@@ -168,13 +219,21 @@ export default {
   color: #229495;
 }
 
-#error_div {
+#error_div,
+#success_div {
   color: white;
-  background: red;
   padding: 7px 5px;
   display: block;
   width: 100%;
   text-align: center;
   margin-top: 15px;
+}
+
+#error_div {
+  background: red;
+}
+
+#success_div {
+  background: green;
 }
 </style>
