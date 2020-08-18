@@ -15,11 +15,15 @@ import Navbar from "./components/Navbar";
 
 export default {
   name: "App",
-
   components: {
     navbar: Navbar
   },
-
+  mounted() {
+    const token = window.localStorage.getItem("token");
+    const result = this.$jwtDec(token);
+    console.log(token);
+    console.log(result);
+  },
   data: () => ({
     //
   })

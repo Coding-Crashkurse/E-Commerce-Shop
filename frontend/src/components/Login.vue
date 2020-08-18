@@ -162,6 +162,7 @@ export default {
           this.error = false;
           this.success = true;
           this.successtxt = "Login successful";
+          window.localStorage.setItem("token", res.data.access_token);
         })
         .catch(err => {
           console.log(err);
