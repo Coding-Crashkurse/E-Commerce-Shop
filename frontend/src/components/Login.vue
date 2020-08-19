@@ -163,6 +163,7 @@ export default {
           this.success = true;
           this.successtxt = "Login successful";
           window.localStorage.setItem("token", res.data.access_token);
+          this.$store.commit("logIn", true);
         })
         .catch(err => {
           console.log(err);

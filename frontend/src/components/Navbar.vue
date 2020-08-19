@@ -12,7 +12,11 @@
         >{{ item.text }}</v-btn
       >
       <v-spacer></v-spacer>
-      <v-btn text to="/login">
+      <v-btn text to="/dashboard" v-if="this.$store.state.loggedIn">
+        Dashboard
+        <v-icon>mdi-account</v-icon>
+      </v-btn>
+      <v-btn text to="/login" v-if="!this.$store.state.loggedIn">
         Login
         <v-icon>mdi-account</v-icon>
       </v-btn>

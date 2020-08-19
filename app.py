@@ -103,8 +103,8 @@ class UserLogin(Resource):
         if bcrypt.check_password_hash(pw_hash=user["password"], password=password):
 
             if user["active"]:
-                access_token = create_access_token(identity=user["id"])
-                refresh_token = create_refresh_token(identity=user["id"])
+                access_token = create_access_token(identity=user["username"])
+                refresh_token = create_refresh_token(identity=user["username"])
                 return (
                     {"access_token": access_token, "refresh_token": refresh_token},
                     200,

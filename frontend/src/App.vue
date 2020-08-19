@@ -18,12 +18,6 @@ export default {
   components: {
     navbar: Navbar
   },
-  mounted() {
-    const token = window.localStorage.getItem("token");
-    const result = this.$jwtDec(token);
-    console.log(token);
-    console.log(result);
-  },
   data: () => ({
     //
   })
