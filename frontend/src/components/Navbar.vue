@@ -11,11 +11,11 @@
         text
       >{{ item.text }}</v-btn>
       <v-spacer></v-spacer>
-      <v-btn text to="/dashboard" v-if="this.$store.state.loggedIn">
+      <v-btn text to="/dashboard" v-if="this.$store.state.userData.loggedIn">
         Dashboard
         <v-icon>mdi-account</v-icon>
       </v-btn>
-      <v-btn text to="/login" v-if="!this.$store.state.loggedIn">
+      <v-btn text to="/login" v-if="!this.$store.state.userData.loggedIn">
         Login
         <v-icon>mdi-account</v-icon>
       </v-btn>

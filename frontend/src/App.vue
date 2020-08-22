@@ -22,8 +22,7 @@ export default {
     //
   }),
   created() {
-    this.$store.commit("tryAutoLogin");
-    this.$router.push("/dashboard");
+    this.$store.commit("tryAutoLogin", this);
   }
 };
 </script>

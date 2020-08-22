@@ -21,7 +21,7 @@ export const store = new Vuex.Store({
       window.localStorage.setItem("token", result);
       window.localStorage.setItem("token_exp", expirationDate);
     },
-    tryAutoLogin(state) {
+    tryAutoLogin(state, vm) {
       console.log("Trying auto login...");
       const token = window.localStorage.getItem("token");
       if (!token) {
@@ -34,7 +34,7 @@ export const store = new Vuex.Store({
       }
       state.userData.loggedIn = true;
       state.userData.username = token.identity;
-      // desired: this.$router.push("/dashboard")
+      vm.$router.push("/dashboard");
     }
   }
 });
