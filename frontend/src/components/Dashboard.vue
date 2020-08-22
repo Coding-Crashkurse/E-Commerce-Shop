@@ -30,7 +30,7 @@
 <script>
 export default {
   mounted() {
-    this.username = result.identity;
+    this.username = this.$store.state.userData.username;
   },
   data: () => ({
     username: "",
