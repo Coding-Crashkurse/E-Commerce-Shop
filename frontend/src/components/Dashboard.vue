@@ -8,7 +8,7 @@
           , you made {{this.history.length}} purchases in the past:
         </h3>
         <v-spacer></v-spacer>
-        <v-btn>Log out</v-btn>
+        <v-btn @click="logOut">Log out</v-btn>
         <table id="customers">
           <tr>
             <th>Item</th>
@@ -49,6 +49,11 @@ export default {
         return acc + obj.price;
       }, 0);
       return `Total spendings ${total} $`;
+    }
+  },
+  methods: {
+    logOut() {
+      this.$store.commit("logOut", this);
     }
   }
 };

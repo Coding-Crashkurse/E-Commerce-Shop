@@ -9,6 +9,9 @@ export const store = new Vuex.Store({
     userData: {
       loggedIn: false,
       username: ""
+    },
+    productData: {
+      arrData: []
     }
   },
   mutations: {
@@ -18,11 +21,15 @@ export const store = new Vuex.Store({
       const result = VueJwtDecode.decode(data.data.access_token);
       const expirationDate = new Date(result.exp * 1000);
       state.userData.username = result.identity;
-      window.localStorage.setItem("token", result);
+      window.localStorage.setItem("token", result.identity);
       window.localStorage.setItem("token_exp", expirationDate);
     },
+    logOut(state, vm) {
+      state.userData.loggedIn = false;
+      window.localStorage.clear();
+      vm.$router.push("/login");
+    },
     tryAutoLogin(state, vm) {
-      console.log("Trying auto login...");
       const token = window.localStorage.getItem("token");
       if (!token) {
         return;
@@ -32,9 +39,13 @@ export const store = new Vuex.Store({
       if (now >= expirationDate) {
         return;
       }
+      console.log(token);
       state.userData.loggedIn = true;
-      state.userData.username = token.identity;
+      state.userData.username = token;
       vm.$router.push("/dashboard");
+    },
+    buyItem(state, item) {
+      state.productData.arrData.push(item);
     }
   }
 });

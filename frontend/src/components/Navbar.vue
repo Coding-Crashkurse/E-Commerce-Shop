@@ -33,9 +33,9 @@ export default {
   data() {
     return {
       left_nav: [
-        { text: "All Products", to: "/" },
-        { text: "Smartphones", to: "/smartphones" },
-        { text: "Notebooks", to: "/notebooks" }
+        { text: "Our Products", to: "/" }
+        // { text: "Smartphones", to: "/smartphones" },
+        // { text: "Notebooks", to: "/notebooks" }
       ]
     };
   }
