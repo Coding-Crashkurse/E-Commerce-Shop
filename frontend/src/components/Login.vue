@@ -4,13 +4,9 @@
       <v-col cols="12" sm="8" md="6">
         <v-card class="elevation-12">
           <v-toolbar color="#229495" dark flat>
-            <v-toolbar-title @click="toggleLogin" v-bind:class="loginClass"
-              >Login</v-toolbar-title
-            >
+            <v-toolbar-title @click="toggleLogin" v-bind:class="loginClass">Login</v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-toolbar-title @click="toggleLogin" v-bind:class="registerClass"
-              >Register</v-toolbar-title
-            >
+            <v-toolbar-title @click="toggleLogin" v-bind:class="registerClass">Register</v-toolbar-title>
           </v-toolbar>
           <v-card-text v-if="login">
             <v-form>
@@ -71,19 +67,13 @@
           <v-card-actions>
             <v-spacer></v-spacer>
 
-            <v-btn color="#229495" v-if="!login" dark @click="submitRegister"
-              >Register</v-btn
-            >
-            <v-btn color="#229495" v-if="login" dark @click="submitLogin"
-              >Login</v-btn
-            >
+            <v-btn color="#229495" v-if="!login" dark @click="submitRegister">Register</v-btn>
+            <v-btn color="#229495" v-if="login" dark @click="submitLogin">Login</v-btn>
           </v-card-actions>
           <div id="error_div" v-if="this.error">
             {{ errortxt }}
             <v-spacer></v-spacer>
-            <v-btn color="white" v-if="activate_user_btn" @click="activateUser"
-              >Activate user</v-btn
-            >
+            <v-btn color="white" v-if="activate_user_btn" @click="activateUser">Activate user</v-btn>
           </div>
           <div id="success_div" v-if="this.success">{{ successtxt }}</div>
         </v-card>
@@ -158,12 +148,10 @@ export default {
           password: this.loginData.password
         })
         .then(res => {
-          console.log(res);
           this.error = false;
           this.success = true;
           this.successtxt = "Login successful";
-          window.localStorage.setItem("token", res.data.access_token);
-          this.$store.commit("logIn", true);
+          this.$store.commit("logIn", res);
         })
         .catch(err => {
           console.log(err);

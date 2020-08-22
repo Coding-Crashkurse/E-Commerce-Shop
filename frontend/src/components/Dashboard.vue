@@ -28,12 +28,8 @@
 </template>
 
 <script>
-import VueJwtDecode from "vue-jwt-decode";
-
 export default {
   mounted() {
-    const token = window.localStorage.getItem("token");
-    const result = VueJwtDecode.decode(token);
     this.username = result.identity;
   },
   data: () => ({
