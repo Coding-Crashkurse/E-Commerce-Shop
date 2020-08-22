@@ -9,8 +9,7 @@
         :title="item.title"
         :to="item.to"
         text
-        >{{ item.text }}</v-btn
-      >
+      >{{ item.text }}</v-btn>
       <v-spacer></v-spacer>
       <v-btn text to="/dashboard" v-if="this.$store.state.loggedIn">
         Dashboard
@@ -29,8 +28,6 @@
 </template>
 
 <script>
-//import HelloWorld from "./components/HelloWorld";
-
 export default {
   name: "App",
   data() {

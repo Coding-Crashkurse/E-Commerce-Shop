@@ -20,7 +20,11 @@ export default {
   },
   data: () => ({
     //
-  })
+  }),
+  created() {
+    this.$store.commit("tryAutoLogin");
+    this.$router.push("/dashboard");
+  }
 };
 </script>
 
