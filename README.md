@@ -23,3 +23,5 @@ npm run serve
 ```
 
 Open browser on http://localhost:8080
+
+Caution: This app is not ready for production, there are endpoints like the `/delete` endpoint, which makes testing and further development easier. Endpoints are currently vulnerable and would just allow GET and POST requests from the command line without a JWT provided.
