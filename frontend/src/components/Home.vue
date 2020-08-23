@@ -9,7 +9,7 @@
         :link="item.link"
       ></card>
     </v-row>
-    <h3>{{totalPrice}}</h3>
+    <h3 v-if="this.$store.state.productData.arrData.length > 0">{{totalPrice}}</h3>
   </v-container>
 </template>
 

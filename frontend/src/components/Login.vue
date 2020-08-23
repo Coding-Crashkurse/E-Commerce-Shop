@@ -151,7 +151,7 @@ export default {
           this.error = false;
           this.success = true;
           this.successtxt = "Login successful";
-          this.$store.commit("logIn", res);
+          this.$store.commit("logIn", { res: res, this: this });
         })
         .catch(err => {
           console.log(err);

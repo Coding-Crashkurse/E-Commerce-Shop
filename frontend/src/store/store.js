@@ -12,18 +12,22 @@ export const store = new Vuex.Store({
       username: ""
     },
     productData: {
-      arrData: []
+      arrData: [],
+      purchases: []
     }
   },
   mutations: {
     logIn(state, data) {
-      window.localStorage.setItem("token", data.data.access_token);
+      console.log(data.res);
+      console.log(data.this);
+      window.localStorage.setItem("token", data.res.data.access_token);
       state.userData.loggedIn = true;
-      const result = VueJwtDecode.decode(data.data.access_token);
+      const result = VueJwtDecode.decode(data.res.data.access_token);
       const expirationDate = new Date(result.exp * 1000);
       state.userData.username = result.identity;
       window.localStorage.setItem("token", result.identity);
       window.localStorage.setItem("token_exp", expirationDate);
+      data.this.$router.push("/dashboard");
     },
     logOut(state, vm) {
       state.userData.loggedIn = false;
@@ -60,6 +64,19 @@ export const store = new Vuex.Store({
         .then(res => {
           console.log(res);
           vm.$router.push("/dashboard");
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    getPurchases(state, id) {
+      console.log("attached");
+      axios
+        .get(`http://localhost:5000/dashboardata/${id}`)
+        .then(res => {
+          console.log(res);
+          state.productData.purchases = res.data.purchases;
+          console.log(state.productData.purchases);
         })
         .catch(err => {
           console.log(err);
