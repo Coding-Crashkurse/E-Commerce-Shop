@@ -9,7 +9,7 @@
         :link="item.link"
       ></card>
     </v-row>
-    <h3>You have some items in your cart {{this.countData.data}}</h3>
+    <h3>You have {{this.countData.data}} items in your cart</h3>
   </v-container>
 </template>
 
@@ -37,7 +37,7 @@ export default {
     ...mapState(["productData"]),
     countData() {
       return {
-        data: "muh"
+        data: this.productData.arrData.length
       };
     }
   }

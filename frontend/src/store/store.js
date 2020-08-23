@@ -46,6 +46,7 @@ export const store = new Vuex.Store({
     },
     buyItem(state, item) {
       state.productData.arrData.push(item);
+      console.log(state.productData.arrData);
     }
   }
 });

@@ -22,7 +22,7 @@ export default {
   props: ["title", "price", "link"],
   methods: {
     addItem() {
-      this.$store.commit({
+      this.$store.commit("buyItem", {
         title: this.title,
         price: this.price,
         link: this.link
