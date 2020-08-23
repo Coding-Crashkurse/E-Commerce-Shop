@@ -1,7 +1,7 @@
 <template>
   <v-card color="grey lighten-4" flat tile>
     <v-toolbar color="#229495" dark>
-      <v-toolbar-title>CompuNerds</v-toolbar-title>
+      <v-toolbar-title>Compu-Global-Hyper-Mega-Net</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn
         v-for="item in left_nav"
