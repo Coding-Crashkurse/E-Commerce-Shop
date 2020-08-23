@@ -12,7 +12,7 @@ from flask_jwt_extended import (
     jwt_refresh_token_required,
 )
 from flask_sqlalchemy import SQLAlchemy
-from models import setup_db, User
+from models import setup_db, User, Purchases
 import re
 import os
 import smtplib
@@ -103,8 +103,8 @@ class UserLogin(Resource):
         if bcrypt.check_password_hash(pw_hash=user["password"], password=password):
 
             if user["active"]:
-                access_token = create_access_token(identity=user["username"])
-                refresh_token = create_refresh_token(identity=user["username"])
+                access_token = create_access_token(identity=user["id"])
+                refresh_token = create_refresh_token(identity=user["id"])
                 return (
                     {"access_token": access_token, "refresh_token": refresh_token},
                     200,
@@ -187,6 +187,35 @@ class Protected(Resource):
 class DeleteUser(Resource):
     def get(self, id):
         User.query.filter_by(id=id).one_or_none().delete()
+
+
+@api.route("/sales")
+class Sales(Resource):
+    def post(self):
+        error = False
+        username = request.get_json()["username"]
+        data = request.get_json()["data"]
+        for item in data:
+            new_item = Purchases(
+                item=item.get("title"), price=item.get("price"), user_id=username
+            )
+            try:
+                new_item.insert()
+            except:
+                error = True
+                db.session.rollback()
+                return {"error": 404}, 404
+        db.session.close()
+        if error is False:
+            return {"created": 201}, 201
+
+
+@api.route("/dashboardata/<int:id>")
+class PersonalSales(Resource):
+    def get(self, id):
+        purchases = Purchases.query.filter_by(user_id=id)
+        purchases = [purchase.format() for purchase in purchases]
+        return {"purchases": purchases}, 201
 
 
 if __name__ == "__main__":

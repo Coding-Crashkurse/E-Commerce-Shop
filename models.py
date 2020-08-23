@@ -54,3 +54,38 @@ class User(db.Model):
             "created_date": self.created_date.strftime("%Y-%m-%d %H:%M:%S"),
         }
 
+
+class Purchases(db.Model):
+    __tablename__ = "purchases"
+
+    id = Column(Integer, primary_key=True)
+    item = Column(String(256))
+    price = Column(String(256))
+    created_date = Column(DateTime, default=datetime.datetime.utcnow)
+    user_id = Column(Integer, db.ForeignKey("users.id"))
+    user = db.relationship("User", backref=db.backref("users"))
+
+    def __init__(self, item, price, user_id):
+        self.item = item
+        self.price = price
+        self.user_id = user_id
+
+    def insert(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def update(self):
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
+    def format(self):
+        return {
+            "id": self.id,
+            "item": self.item,
+            "price": self.price,
+            "created_date": self.created_date.strftime("%Y-%m-%d %H:%M:%S"),
+            "user_id": self.user_id,
+        }

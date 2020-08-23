@@ -19,7 +19,7 @@
         Login
         <v-icon>mdi-account</v-icon>
       </v-btn>
-      <v-btn color="primary" dark>
+      <v-btn color="primary" dark to="/cart">
         Cart
         <v-icon>mdi-cart</v-icon>
       </v-btn>

@@ -3,6 +3,7 @@ import Vuex from "vuex";
 import VueJwtDecode from "vue-jwt-decode";
 
 Vue.use(Vuex);
+import axios from "axios";
 
 export const store = new Vuex.Store({
   state: {
@@ -39,7 +40,6 @@ export const store = new Vuex.Store({
       if (now >= expirationDate) {
         return;
       }
-      console.log(token);
       state.userData.loggedIn = true;
       state.userData.username = token;
       vm.$router.push("/dashboard");
@@ -47,6 +47,23 @@ export const store = new Vuex.Store({
     buyItem(state, item) {
       state.productData.arrData.push(item);
       console.log(state.productData.arrData);
+    },
+    deleteItem(state, index) {
+      state.productData.arrData.splice(index, 1);
+    },
+    confirmPurchase(state, vm) {
+      axios
+        .post("http://localhost:5000/sales", {
+          username: state.userData.username,
+          data: state.productData.arrData
+        })
+        .then(res => {
+          console.log(res);
+          vm.$router.push("/dashboard");
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }
 });

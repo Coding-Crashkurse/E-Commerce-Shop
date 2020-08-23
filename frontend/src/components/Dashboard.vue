@@ -31,6 +31,7 @@
 export default {
   mounted() {
     this.username = this.$store.state.userData.username;
+    this.$store.commit("getPurchases", this.username);
   },
   data: () => ({
     username: "",

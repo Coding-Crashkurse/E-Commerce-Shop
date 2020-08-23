@@ -9,7 +9,7 @@
         :link="item.link"
       ></card>
     </v-row>
-    <h3>You have {{this.countData.data}} items in your cart</h3>
+    <h3>{{totalPrice}}</h3>
   </v-container>
 </template>
 
@@ -35,10 +35,13 @@ export default {
   },
   computed: {
     ...mapState(["productData"]),
-    countData() {
-      return {
-        data: this.productData.arrData.length
-      };
+    totalPrice() {
+      const total = this.productData.arrData.reduce(function(acc, obj) {
+        return acc + obj.price;
+      }, 0);
+      return `Total amount: ${Math.round(total)} $ for ${
+        this.productData.arrData.length
+      } items`;
     }
   }
 };
